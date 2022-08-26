@@ -40,7 +40,6 @@ export default function FormWithSettings() {
       const newObject = { N: i, id, amount };
       newRowArray.columns.push(newObject);
     }
-    console.log(newRowArray);
     dispatch(addRow(newRowArray));
   }
 

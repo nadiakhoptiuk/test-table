@@ -11,10 +11,7 @@ export const tableDataSlice = createSlice({
       return state.filter(row => row.M !== payload);
     },
     addRow: (state, { payload }) => {
-      console.log(payload);
-
-      const newState = [...state, payload];
-      return newState;
+      return [...state, payload];
     },
   },
 });

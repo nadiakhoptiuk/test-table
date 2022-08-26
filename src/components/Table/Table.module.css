@@ -6,9 +6,74 @@
 .table td {
   padding: 10px;
   border: 1px solid #2a2a2a;
+  text-align: center;
   cursor: pointer;
+  background-color: #fff;
+}
+
+.table td {
+  transition: background-color 300ms ease-in-out;
 }
 
 .table td:hover {
-  background-color: blue;
+  background-color: rgb(206, 222, 240);
+}
+
+.totalAmountByRow {
+  position: relative;
+
+  overflow: hidden;
+}
+
+.totalAmountByRow:hover .totalAmountByRowPercentage {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.totalAmountByRow:hover .totalAmountByRowCount {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.totalAmountByRow:hover .totalAmountByRowChart {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.totalAmountByRowCommon {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.totalAmountByRowCount {
+  composes: totalAmountByRowCommon;
+  width: 100%;
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 300ms ease-in-out, opacity 500ms ease-in-out;
+}
+
+.totalAmountByRowChart {
+  composes: totalAmountByRowCommon;
+  background-color: #b6b5b5;
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: transform 300ms ease-in-out, opacity 500ms ease-in-out;
+}
+
+.totalAmountByRowPercentage {
+  composes: totalAmountByRowCommon;
+  width: 100%;
+  font-weight: 700;
+  color: #153058;
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: transform 300ms ease-in-out, opacity 500ms ease-in-out;
 }
