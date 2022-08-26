@@ -1,2 +1,7 @@
-export { setTableData, deleteRow, addRow } from './tableDataSlice';
+export {
+  setTableData,
+  deleteRow,
+  addRow,
+  incrementAmount,
+} from './tableDataSlice';
 export { store } from './store';

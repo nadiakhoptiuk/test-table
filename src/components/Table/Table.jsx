@@ -1,7 +1,7 @@
 import { tableDataSelector } from 'redux/tableSelectors';
 import { useSelector, useDispatch } from 'react-redux';
 import s from './Table.module.css';
-import { deleteRow } from '../../redux';
+import { deleteRow, incrementAmount } from '../../redux';
 import { useEffect, useState } from 'react';
 
 export default function Table() {
@@ -18,8 +18,6 @@ export default function Table() {
   //     console.log(res);
   //   }
   // }
-
-  // getTotalRow();
 
   useEffect(() => {
     if (!tableData || tableData.length === 0) {
@@ -81,7 +79,16 @@ export default function Table() {
               return (
                 <tr key={M}>
                   {columns.map(column => (
-                    <td key={column.id}>{column.amount}</td>
+                    <td
+                      key={column.id}
+                      onClick={() =>
+                        dispatch(
+                          incrementAmount({ row: M, idToFind: column.id })
+                        )
+                      }
+                    >
+                      {column.amount}
+                    </td>
                   ))}
                   <td
                     key={`totalByRow{M}`}
