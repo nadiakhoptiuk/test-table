@@ -1,6 +1,9 @@
 import short from 'short-uuid';
 import useFormFields from 'hooks/useFormFields';
 import { min, max } from 'service/constants';
+import { addRow, setTableData } from '../../redux/';
+import { useDispatch, useSelector } from 'react-redux';
+import { tableDataSelector } from 'redux/tableSelectors';
 
 export default function FormWithSettings() {
   const {
@@ -18,12 +21,28 @@ export default function FormWithSettings() {
     setState: setXValue,
     handleChange: handleXValueChange,
   } = useFormFields('');
+  const dispatch = useDispatch();
+  const tableData = useSelector(tableDataSelector);
 
   const resetForm = () => {
     setMValue('');
     setNValue('');
     setXValue('');
   };
+
+  function createNewRow() {
+    const newRowArray = { M: tableData.length + 1, columns: [] };
+
+    for (let i = 1; i <= tableData[0].columns.length; i++) {
+      const id = short.generate();
+      const amount = getRandomAmount();
+
+      const newObject = { N: i, id, amount };
+      newRowArray.columns.push(newObject);
+    }
+    console.log(newRowArray);
+    dispatch(addRow(newRowArray));
+  }
 
   function createDataForTable(evt) {
     evt.preventDefault();
@@ -37,12 +56,11 @@ export default function FormWithSettings() {
 
         const newObject = { N: j, id, amount };
         innerArr.push(newObject);
-        console.log(newObject);
       }
-      mainArr.push({ M: i, rows: innerArr });
+      mainArr.push({ M: i, columns: innerArr });
     }
-    console.log(mainArr);
-    // resetForm();
+    dispatch(setTableData(mainArr));
+    resetForm();
   }
 
   function getRandomAmount() {
@@ -97,6 +115,7 @@ export default function FormWithSettings() {
         <button type="submit">Generate table</button>
       </form>
       <button onClick={resetForm}>Clear all inputs</button>
+      {tableData ? <button onClick={createNewRow}>Add row</button> : null}
     </>
   );
 }
