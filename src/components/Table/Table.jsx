@@ -19,6 +19,43 @@ export default function Table() {
   //   }
   // }
 
+  function getArrayOfTds() {
+    if (!tableData || tableData.length === 0) {
+      return;
+    }
+    const arrayOfTds = tableData.reduce((sum, row) => {
+      return [...sum, ...row.columns];
+    }, []);
+    findClosestEl(2, arrayOfTds);
+  }
+
+  getArrayOfTds();
+
+  function findClosestEl(x, array) {
+    const differenceDataForEach = array.map(el => {
+      const arrayOfAnotherTds = array.reduce((arr, td) => {
+        if (td.id === el.id) {
+          return arr;
+        } else {
+          const diff = Math.abs(td.amount - el.amount);
+          const newTd = { ...td, different: diff };
+          delete newTd.amount;
+          delete newTd.N;
+          return [...arr, newTd];
+        }
+      }, []);
+
+      const closestTd = [...arrayOfAnotherTds]
+        .sort((a, b) => {
+          return a.different - b.different;
+        })
+        .slice(0, x);
+      return { id: el.id, tds: closestTd };
+    });
+
+    console.log(differenceDataForEach);
+  }
+
   useEffect(() => {
     if (!tableData || tableData.length === 0) {
       return;
