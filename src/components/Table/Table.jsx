@@ -8,52 +8,48 @@ export default function Table() {
   const [averagesByColumns, setAveragesByColumns] = useState([]);
   const [totalAmountByRows, setTotalAmountByRows] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [closestTd, setClosestTd] = useState(null);
+
   const tableData = useSelector(tableDataSelector);
   const dispatch = useDispatch();
   const rowCount = tableData.length;
 
-  // function getTotalRow() {
-  //   if (tableData) {
-  //     const res = tableData[0].columns.reduce((sum, td) => sum + td.amount, 0);
-  //     console.log(res);
-  //   }
-  // }
-
-  function getArrayOfTds() {
+  function getArrayOfTds(id) {
     if (!tableData || tableData.length === 0) {
       return;
     }
     const arrayOfTds = tableData.reduce((sum, row) => {
       return [...sum, ...row.columns];
     }, []);
-    findClosestEl(2, arrayOfTds);
+    const closestEl = findClosestEl(2, arrayOfTds, id);
+    setClosestTd(closestEl);
   }
 
-  getArrayOfTds();
+  function findClosestEl(x, array, id) {
+    const neededTd = array.find(el => el.id === id);
 
-  function findClosestEl(x, array) {
-    const differenceDataForEach = array.map(el => {
-      const arrayOfAnotherTds = array.reduce((arr, td) => {
-        if (td.id === el.id) {
-          return arr;
-        } else {
-          const diff = Math.abs(td.amount - el.amount);
-          const newTd = { ...td, different: diff };
-          delete newTd.amount;
-          delete newTd.N;
-          return [...arr, newTd];
-        }
-      }, []);
+    const arrayOfAnotherTds = array.reduce((arr, td) => {
+      if (td.id === id) {
+        return arr;
+      } else {
+        const diff = Math.abs(td.amount - neededTd.amount);
+        const newTd = { ...td, different: diff };
+        delete newTd.amount;
+        delete newTd.N;
+        return [...arr, newTd];
+      }
+    }, []);
 
-      const closestTd = [...arrayOfAnotherTds]
-        .sort((a, b) => {
-          return a.different - b.different;
-        })
-        .slice(0, x);
-      return { id: el.id, tds: closestTd };
-    });
+    return [...arrayOfAnotherTds]
+      .sort((a, b) => {
+        return a.different - b.different;
+      })
+      .slice(0, x);
+  }
 
-    console.log(differenceDataForEach);
+  function handleHoverTd(evt) {
+    const id = evt.target.id;
+    getArrayOfTds(id);
   }
 
   useEffect(() => {
@@ -118,10 +114,18 @@ export default function Table() {
                   {columns.map(column => (
                     <td
                       key={column.id}
+                      id={column.id}
                       onClick={() =>
                         dispatch(
                           incrementAmount({ row: M, idToFind: column.id })
                         )
+                      }
+                      onMouseEnter={handleHoverTd}
+                      onMouseLeave={() => setClosestTd(null)}
+                      className={
+                        closestTd?.find(({ id }) => id === column.id)
+                          ? s.activeTd
+                          : s.baseTd
                       }
                     >
                       {column.amount}

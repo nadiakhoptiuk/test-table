@@ -8,7 +8,6 @@
   border: 1px solid #2a2a2a;
   text-align: center;
   cursor: pointer;
-  background-color: #fff;
 }
 
 .table td {
@@ -16,6 +15,14 @@
 }
 
 .table td:hover {
+  background-color: rgb(168, 198, 233);
+}
+
+.baseTd {
+  background-color: #fff;
+}
+
+.activeTd {
   background-color: rgb(206, 222, 240);
 }
 
