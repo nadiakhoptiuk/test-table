@@ -42,11 +42,11 @@
 .submitBtn,
 .clearBtn {
   height: 40px;
-  width: 200px;
+  width: 100%;
   margin-bottom: 20px;
   font-size: 16px;
   background-color: var(--main-bg-color);
-  border: 1px solid var(--accent-text-color);
+  border: none;
   border-radius: 4px;
   cursor: pointer;
   transform: scale(1);
@@ -65,6 +65,9 @@
 }
 
 .clearBtn {
+  height: 30px;
+  width: 150px;
+  border: none;
   margin-bottom: 0;
 }
 

@@ -16,6 +16,7 @@ export default function Table() {
   const [totalAmountByRows, setTotalAmountByRows] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const [closestTd, setClosestTd] = useState(null);
+  const [headers, setHeaders] = useState('');
   const { N, x } = useSelector(outputDataSelector);
 
   const tableData = useSelector(tableDataSelector);
@@ -24,6 +25,10 @@ export default function Table() {
   function handleHoverTd(evt) {
     const id = evt.target.id;
     getArrayOfTds(id);
+  }
+
+  function handleHoverHeader(evt) {
+    evt.target.id === 'average' && setHeaders('average');
   }
 
   function getArrayOfTds(id) {
@@ -185,12 +190,24 @@ export default function Table() {
           <tr>
             {averagesByColumns.map((td, index) => {
               return (
-                <td key={index} className={s.tableHeader}>
+                <td
+                  key={index}
+                  className={
+                    headers === 'average' ? s.activeHeader : s.tableHeader
+                  }
+                >
                   {td}
                 </td>
               );
             })}
-            <td className={s.tableHeader}>Average by columns:</td>
+            <td
+              className={s.tableHeader}
+              onMouseEnter={handleHoverHeader}
+              onMouseLeave={() => setHeaders('')}
+              id="average"
+            >
+              Average by columns:
+            </td>
           </tr>
         </tbody>
       </table>

@@ -79,6 +79,12 @@
   background-color: var(--secondary-bg-color);
 }
 
+.activeHeader {
+  background-color: var(--secondary-bg-color);
+  font-weight: 600;
+  color: var(--accent-text-color);
+}
+
 .totalAmountByRow {
   position: relative;
 
