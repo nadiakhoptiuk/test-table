@@ -1,7 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
+import outputReducer from 'redux/outputData/outputDataSlice';
 
-import tableReducer from './tableDataSlice';
+import tableReducer from './tableData/tableDataSlice';
 
 export const store = configureStore({
-  reducer: tableReducer,
+  reducer: {
+    tableData: tableReducer,
+    outputData: outputReducer,
+  },
 });

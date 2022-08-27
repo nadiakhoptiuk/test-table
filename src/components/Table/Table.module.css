@@ -1,29 +1,82 @@
+.mainWrapper {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.btnsList {
+  margin: 0 10px;
+  list-style: none;
+  padding: 0;
+  padding-top: 47px;
+}
+
+.btnsList li {
+  width: 115px;
+}
+
+.deleteRowBtn {
+  width: 100%;
+  margin: 8px 0;
+  padding: 0 10px;
+  height: 26px;
+  word-break: keep-all;
+  border: none;
+  background-color: var(--main-bg-color);
+  color: var(--main-text-color);
+  cursor: pointer;
+  border-radius: 4px;
+  transform: scale(1);
+  transition: all 300ms ease-in-out;
+}
+
+.deleteRowBtn:hover {
+  transform: scale(1.1);
+  background-color: var(--secondary-bg-color);
+  color: var(--accent-text-color);
+}
+
+.addRowBtn {
+  composes: deleteRowBtn;
+  font-size: 15px;
+  color: var(--accent-text-color);
+  background-color: var(--secondary-bg-color);
+}
+
+.tableCaption {
+  margin-bottom: 15px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
 .table {
   border-collapse: collapse;
 }
 
 .table tr,
-.table td {
+.table td,
+.table th {
   padding: 10px;
-  border: 1px solid #2a2a2a;
+  border: 1px solid var(--chart-bg-color);
   text-align: center;
   cursor: pointer;
 }
 
 .table td {
+  width: 100px;
   transition: background-color 300ms ease-in-out;
 }
 
 .table td:hover {
-  background-color: rgb(168, 198, 233);
+  background-color: var(--accent-bg-color);
 }
 
 .baseTd {
-  background-color: #fff;
+  background-color: var(--main-bg-color);
 }
 
 .activeTd {
-  background-color: rgb(206, 222, 240);
+  background-color: var(--secondary-bg-color);
 }
 
 .totalAmountByRow {
@@ -63,13 +116,15 @@
   composes: totalAmountByRowCommon;
   width: 100%;
   transform: translateX(0);
+  color: var(--accent-text-color);
+  font-weight: 600;
   opacity: 1;
   transition: transform 300ms ease-in-out, opacity 500ms ease-in-out;
 }
 
 .totalAmountByRowChart {
   composes: totalAmountByRowCommon;
-  background-color: #b6b5b5;
+  background-color: var(--chart-bg-color);
   transform: translateX(-100%);
   opacity: 0;
   transition: transform 300ms ease-in-out, opacity 500ms ease-in-out;
@@ -78,9 +133,14 @@
 .totalAmountByRowPercentage {
   composes: totalAmountByRowCommon;
   width: 100%;
-  font-weight: 700;
-  color: #153058;
+  font-weight: 600;
+  color: var(--chart-text-color);
   transform: translateX(-100%);
   opacity: 0;
   transition: transform 300ms ease-in-out, opacity 500ms ease-in-out;
+}
+
+.tableHeader {
+  color: var(--accent-text-color);
+  font-weight: 600;
 }

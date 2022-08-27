@@ -1,18 +1,30 @@
-import { tableDataSelector } from 'redux/tableSelectors';
+import short from 'short-uuid';
+import { tableDataSelector } from 'redux/tableData/tableSelectors';
 import { useSelector, useDispatch } from 'react-redux';
 import s from './Table.module.css';
-import { deleteRow, incrementAmount } from '../../redux';
+import {
+  deleteRow,
+  incrementAmount,
+  addRow,
+} from 'redux/tableData/tableDataSlice';
 import { useEffect, useState } from 'react';
+import { outputDataSelector } from 'redux/outputData/outputDataSelectors';
+import { getRandomAmount } from 'service/utils';
 
 export default function Table() {
   const [averagesByColumns, setAveragesByColumns] = useState([]);
   const [totalAmountByRows, setTotalAmountByRows] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const [closestTd, setClosestTd] = useState(null);
+  const { N, x } = useSelector(outputDataSelector);
 
   const tableData = useSelector(tableDataSelector);
   const dispatch = useDispatch();
-  const rowCount = tableData.length;
+
+  function handleHoverTd(evt) {
+    const id = evt.target.id;
+    getArrayOfTds(id);
+  }
 
   function getArrayOfTds(id) {
     if (!tableData || tableData.length === 0) {
@@ -21,11 +33,11 @@ export default function Table() {
     const arrayOfTds = tableData.reduce((sum, row) => {
       return [...sum, ...row.columns];
     }, []);
-    const closestEl = findClosestEl(2, arrayOfTds, id);
+    const closestEl = findClosestEl(arrayOfTds, id);
     setClosestTd(closestEl);
   }
 
-  function findClosestEl(x, array, id) {
+  function findClosestEl(array, id) {
     const neededTd = array.find(el => el.id === id);
 
     const arrayOfAnotherTds = array.reduce((arr, td) => {
@@ -47,9 +59,19 @@ export default function Table() {
       .slice(0, x);
   }
 
-  function handleHoverTd(evt) {
-    const id = evt.target.id;
-    getArrayOfTds(id);
+  function createNewRow() {
+    const newRowArray = {
+      M: tableData[tableData.length - 1].M + 1,
+      columns: [],
+    };
+    for (let i = 1; i <= N; i++) {
+      const id = short.generate();
+      const amount = getRandomAmount();
+
+      const newObject = { N: i, id, amount };
+      newRowArray.columns.push(newObject);
+    }
+    dispatch(addRow(newRowArray));
   }
 
   useEffect(() => {
@@ -72,45 +94,50 @@ export default function Table() {
     if (!tableData || tableData.length === 0) {
       return;
     } else {
-      const columnCount = tableData[0]?.columns?.length;
       const averagesArr = [];
-      for (let i = 0; i < columnCount; i++) {
+      for (let i = 0; i < N; i++) {
         const total = tableData.reduce((sum, td) => {
           return sum + td.columns[i].amount;
         }, 0);
-        averagesArr.push((total / rowCount).toFixed(2));
+        averagesArr.push((total / tableData.length).toFixed(2));
       }
       setAveragesByColumns(averagesArr);
     }
-  }, [rowCount, tableData]);
+  }, [N, tableData]);
 
   return tableData ? (
-    <>
-      {tableData ? (
-        <ul>
-          {tableData?.map(row => {
-            return (
-              <li key={row.M}>
-                <button onClick={() => dispatch(deleteRow(row.M))}>
-                  Delete row
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      ) : null}
+    <div className={s.mainWrapper}>
+      <ul className={s.btnsList}>
+        <li>
+          <button onClick={createNewRow} className={s.addRowBtn}>
+            Add new row
+          </button>
+        </li>
+        {tableData?.map(row => {
+          return (
+            <li key={row.M}>
+              <button
+                onClick={() => dispatch(deleteRow(row.M))}
+                className={s.deleteRowBtn}
+              >
+                Delete row
+              </button>
+            </li>
+          );
+        })}
+      </ul>
 
       <table className={s.table}>
-        <caption>Your matrix</caption>
+        <caption className={s.tableCaption}>Your matrix</caption>
         <tbody>
           <tr>
             <th colSpan={tableData[0].columns.length}></th>
-            <th>Total by rows:</th>
+            <th className={s.tableHeader}>Total by rows:</th>
           </tr>
           {tableData &&
             tableData?.map(({ M, columns }, index) => {
               return (
-                <tr key={M}>
+                <tr key={index}>
                   {columns.map(column => (
                     <td
                       key={column.id}
@@ -157,12 +184,16 @@ export default function Table() {
             })}
           <tr>
             {averagesByColumns.map((td, index) => {
-              return <td key={index}>{td}</td>;
+              return (
+                <td key={index} className={s.tableHeader}>
+                  {td}
+                </td>
+              );
             })}
-            <th>Average by columns:</th>
+            <td className={s.tableHeader}>Average by columns:</td>
           </tr>
         </tbody>
       </table>
-    </>
+    </div>
   ) : null;
 }

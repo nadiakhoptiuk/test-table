@@ -1,9 +1,12 @@
 import short from 'short-uuid';
 import useFormFields from 'hooks/useFormFields';
-import { min, max } from 'service/constants';
-import { addRow, setTableData } from '../../redux/';
+import { setTableData } from 'redux/tableData/tableDataSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { tableDataSelector } from 'redux/tableSelectors';
+import { tableDataSelector } from 'redux/tableData/tableSelectors';
+import { setOutputData } from 'redux/outputData/outputDataSlice';
+import { outputDataSelector } from 'redux/outputData/outputDataSelectors';
+import s from './FormWithSettings.module.css';
+import { getRandomAmount } from 'service/utils';
 
 export default function FormWithSettings() {
   const {
@@ -22,7 +25,8 @@ export default function FormWithSettings() {
     handleChange: handleXValueChange,
   } = useFormFields('');
   const dispatch = useDispatch();
-  const tableData = useSelector(tableDataSelector);
+
+  const maxXValue = getMaxXValue();
 
   const resetForm = () => {
     setMValue('');
@@ -30,21 +34,10 @@ export default function FormWithSettings() {
     setXValue('');
   };
 
-  function createNewRow() {
-    const newRowArray = { M: tableData.length + 1, columns: [] };
-
-    for (let i = 1; i <= tableData[0].columns.length; i++) {
-      const id = short.generate();
-      const amount = getRandomAmount();
-
-      const newObject = { N: i, id, amount };
-      newRowArray.columns.push(newObject);
-    }
-    dispatch(addRow(newRowArray));
-  }
-
   function createDataForTable(evt) {
     evt.preventDefault();
+
+    dispatch(setOutputData({ M: MValue, N: NValue, x: xValue }));
     const mainArr = [];
 
     for (let i = 1; i <= MValue; i++) {
@@ -62,59 +55,68 @@ export default function FormWithSettings() {
     resetForm();
   }
 
-  function getRandomAmount() {
-    return Math.floor(Math.random() * (max - min) + min);
+  function getMaxXValue() {
+    if (!MValue || !NValue) {
+      return;
+    }
+    return MValue * NValue - 1;
   }
 
   return (
     <>
-      <form onSubmit={createDataForTable}>
-        <label>
-          Enter M:
-          <input
-            // className={s.input}
-            type="number"
-            name="M"
-            value={MValue}
-            onChange={handleMValueChange}
-            max="100"
-            min="1"
-            title="Name may contain only number from 1 to 100"
-            required
-          />
-        </label>
-        <label>
-          Enter N:
-          <input
-            // className={s.input}
-            type="number"
-            name="N"
-            value={NValue}
-            onChange={handleNValueChange}
-            max="100"
-            min="1"
-            title="Name may contain only number from 1 to 100"
-            required
-          />
-        </label>
-        <label>
-          Enter x:
-          <input
-            // className={s.input}
-            type="number"
-            name="x"
-            value={xValue}
-            onChange={handleXValueChange}
-            max={`${MValue} * ${NValue}`}
-            min="1"
-            title="Name may contain only number from 1 to {M*N}"
-            required
-          />
-        </label>
-        <button type="submit">Generate table</button>
-      </form>
-      <button onClick={resetForm}>Clear all inputs</button>
-      {tableData ? <button onClick={createNewRow}>Add row</button> : null}
+      <div className={s.container}>
+        <p className={s.formTitle}>Enter the settings for the matrix please:</p>
+        <form onSubmit={createDataForTable} className={s.form}>
+          <label className={s.inputLabel}>
+            Row number:
+            <input
+              className={s.input}
+              type="number"
+              name="M"
+              value={MValue}
+              onChange={handleMValueChange}
+              max="100"
+              min="1"
+              autoFocus={true}
+              title="Name may contain only number from 1 to 100"
+              required
+            />
+          </label>
+          <label className={s.inputLabel}>
+            Column number:
+            <input
+              className={s.input}
+              type="number"
+              name="N"
+              value={NValue}
+              onChange={handleNValueChange}
+              max="100"
+              min="1"
+              title="Name may contain only number from 1 to 100"
+              required
+            />
+          </label>
+          <label className={s.inputLabel}>
+            Closest values number:
+            <input
+              className={s.input}
+              type="number"
+              name="x"
+              value={xValue}
+              onChange={handleXValueChange}
+              max={`${maxXValue}`}
+              min="1"
+              required
+            />
+          </label>
+          <button type="submit" className={s.submitBtn}>
+            Generate table
+          </button>
+        </form>
+        <button onClick={resetForm} className={s.clearBtn}>
+          Clear all inputs
+        </button>
+      </div>
     </>
   );
 }
