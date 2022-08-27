@@ -1,10 +1,8 @@
 import short from 'short-uuid';
 import useFormFields from 'hooks/useFormFields';
 import { setTableData } from 'redux/tableData/tableDataSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { tableDataSelector } from 'redux/tableData/tableSelectors';
+import { useDispatch } from 'react-redux';
 import { setOutputData } from 'redux/outputData/outputDataSlice';
-import { outputDataSelector } from 'redux/outputData/outputDataSelectors';
 import s from './FormWithSettings.module.css';
 import { getRandomAmount } from 'service/utils';
 
