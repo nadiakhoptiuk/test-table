@@ -112,25 +112,35 @@ export default function Table() {
 
   return tableData ? (
     <div className={s.mainWrapper}>
-      <ul className={s.btnsList}>
-        <li>
-          <button onClick={createNewRow} className={s.addRowBtn}>
-            Add new row
-          </button>
-        </li>
-        {tableData?.map(row => {
-          return (
-            <li key={row.M}>
-              <button
-                onClick={() => dispatch(deleteRow(row.M))}
-                className={s.deleteRowBtn}
-              >
-                Delete row
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+      <div>
+        <ul className={s.btnsList}>
+          <li>
+            <button onClick={createNewRow} className={s.addRowBtn}>
+              Add new row
+            </button>
+          </li>
+          {tableData?.map(row => {
+            return (
+              <li key={row.M}>
+                <button
+                  onClick={() => dispatch(deleteRow(row.M))}
+                  className={s.deleteRowBtn}
+                >
+                  Delete row
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        <p
+          className={s.tableHeaderAverage}
+          onMouseEnter={handleHoverHeader}
+          onMouseLeave={() => setHeaders('')}
+          id="average"
+        >
+          Average by columns:
+        </p>
+      </div>
 
       <table className={s.table}>
         <caption className={s.tableCaption}>Your matrix</caption>
@@ -200,13 +210,9 @@ export default function Table() {
                 </td>
               );
             })}
-            <td
-              className={s.tableHeader}
-              onMouseEnter={handleHoverHeader}
-              onMouseLeave={() => setHeaders('')}
-              id="average"
-            >
-              Average by columns:
+            <td className={s.tableHeaderTotal}>
+              Total amount: <br />
+              {totalAmount}
             </td>
           </tr>
         </tbody>

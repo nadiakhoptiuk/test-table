@@ -5,19 +5,20 @@
 }
 
 .btnsList {
+  width: 115px;
   margin: 0 10px;
   list-style: none;
   padding: 0;
-  padding-top: 47px;
+  padding-top: 55px;
 }
 
 .btnsList li {
   width: 115px;
+  margin-bottom: 16px;
 }
 
 .deleteRowBtn {
   width: 100%;
-  margin: 8px 0;
   padding: 0 10px;
   height: 26px;
   word-break: keep-all;
@@ -80,7 +81,7 @@
 }
 
 .activeHeader {
-  background-color: var(--secondary-bg-color);
+  background-color: var(--accent-bg-color);
   font-weight: 600;
   color: var(--accent-text-color);
 }
@@ -147,6 +148,20 @@
 }
 
 .tableHeader {
+  margin: 8px 0;
   color: var(--accent-text-color);
   font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+}
+
+.tableHeaderAverage {
+  composes: tableHeader;
+  width: 115px;
+  margin: 10px;
+}
+
+.tableHeaderTotal {
+  composes: tableHeader;
+  background-color: var(--secondary-bg-color);
 }
