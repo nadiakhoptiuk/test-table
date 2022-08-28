@@ -1,1 +1,1 @@
-export { default } from './FormWithSettings.jsx';
+export { default } from './FormWithSettings';

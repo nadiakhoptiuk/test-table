@@ -1,10 +1,10 @@
 import short from 'short-uuid';
-import useFormFields from 'hooks/useFormFields';
-import { setTableData } from 'redux/tableData/tableDataSlice';
 import { useDispatch } from 'react-redux';
+import useFormFields from 'hooks/useFormFields';
+import { getRandomAmount } from 'service/utils';
+import { setTableData } from 'redux/tableData/tableDataSlice';
 import { setOutputData } from 'redux/outputData/outputDataSlice';
 import s from './FormWithSettings.module.css';
-import { getRandomAmount } from 'service/utils';
 
 export default function FormWithSettings() {
   const {
@@ -22,16 +22,11 @@ export default function FormWithSettings() {
     setState: setXValue,
     handleChange: handleXValueChange,
   } = useFormFields('');
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
   const maxXValue = getMaxXValue();
 
-  const resetForm = () => {
-    setMValue('');
-    setNValue('');
-    setXValue('');
-  };
-
+  // generate random data for table
   function createDataForTable(evt) {
     evt.preventDefault();
 
@@ -53,11 +48,19 @@ export default function FormWithSettings() {
     resetForm();
   }
 
+  // calculate the largest possible x value for validation in the form input
   function getMaxXValue() {
     if (!MValue || !NValue) {
       return;
     }
     return MValue * NValue - 1;
+  }
+
+  // reset form inputs after submit
+  function resetForm() {
+    setMValue('');
+    setNValue('');
+    setXValue('');
   }
 
   return (

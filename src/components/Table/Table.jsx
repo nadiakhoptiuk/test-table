@@ -1,15 +1,15 @@
 import short from 'short-uuid';
-import { tableDataSelector } from 'redux/tableData/tableSelectors';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import s from './Table.module.css';
 import {
   deleteRow,
   incrementAmount,
   addRow,
 } from 'redux/tableData/tableDataSlice';
-import { useEffect, useState } from 'react';
-import { outputDataSelector } from 'redux/outputData/outputDataSelectors';
 import { getRandomAmount } from 'service/utils';
+import { tableDataSelector } from 'redux/tableData/tableSelectors';
+import { outputDataSelector } from 'redux/outputData/outputDataSelectors';
+import s from './Table.module.css';
 
 export default function Table() {
   const [averagesByColumns, setAveragesByColumns] = useState([]);
@@ -17,20 +17,23 @@ export default function Table() {
   const [totalAmount, setTotalAmount] = useState(0);
   const [closestTd, setClosestTd] = useState(null);
   const [headers, setHeaders] = useState('');
-  const { N, x } = useSelector(outputDataSelector);
 
+  const { N, x } = useSelector(outputDataSelector);
   const tableData = useSelector(tableDataSelector);
   const dispatch = useDispatch();
 
+  // handled hover on table elements
   function handleHoverTd(evt) {
     const id = evt.target.id;
     getArrayOfTds(id);
   }
 
+  // handled hover on titles
   function handleHoverHeader(evt) {
     evt.target.id === 'average' && setHeaders('average');
   }
 
+  // get array of elements with closest values
   function getArrayOfTds(id) {
     if (!tableData || tableData.length === 0) {
       return;
@@ -42,6 +45,7 @@ export default function Table() {
     setClosestTd(closestEl);
   }
 
+  // find elements with closest values
   function findClosestEl(array, id) {
     const neededTd = array.find(el => el.id === id);
 
@@ -64,6 +68,7 @@ export default function Table() {
       .slice(0, x);
   }
 
+  // generate data for new row
   function createNewRow() {
     const newRowArray = {
       M: tableData[tableData.length - 1].M + 1,
@@ -79,6 +84,7 @@ export default function Table() {
     dispatch(addRow(newRowArray));
   }
 
+  // calculate total by rows and total amount
   useEffect(() => {
     if (!tableData || tableData.length === 0) {
       return;
@@ -95,6 +101,7 @@ export default function Table() {
     }
   }, [tableData]);
 
+  // calculate average by columns
   useEffect(() => {
     if (!tableData || tableData.length === 0) {
       return;
