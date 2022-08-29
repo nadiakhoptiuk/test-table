@@ -122,7 +122,11 @@ export default function Table() {
       <div>
         <ul className={s.btnsList}>
           <li>
-            <button onClick={createNewRow} className={s.addRowBtn}>
+            <button
+              onClick={createNewRow}
+              className={tableData.length === 100 ? s.disabledBtn : s.addRowBtn}
+              disabled={tableData.length === 100 ? true : false}
+            >
               Add new row
             </button>
           </li>
@@ -131,7 +135,10 @@ export default function Table() {
               <li key={row.M}>
                 <button
                   onClick={() => dispatch(deleteRow(row.M))}
-                  className={s.deleteRowBtn}
+                  className={
+                    tableData.length === 1 ? s.disabledBtn : s.deleteRowBtn
+                  }
+                  disabled={tableData.length === 1 ? true : false}
                 >
                   Delete row
                 </button>
