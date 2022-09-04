@@ -11,25 +11,35 @@ export const tableDataSlice = createSlice({
       return state.filter(row => row.M !== payload);
     },
     addRow: (state, { payload }) => {
-      return [...state, payload];
+      // writing immutable state with using Immer
+      state.push(payload);
+
+      // writing immutable state with JS native tools will look like this:
+      // return [...state, payload];
     },
     incrementAmount: (state, { payload }) => {
       const { row, idToFind } = payload;
+
       const neededRow = state.find(el => el.M === row);
       const neededTd = neededRow.columns.find(el => el.id === idToFind);
 
-      const { N, amount } = neededTd;
-      const newTd = { N, id: idToFind, amount: amount + 1 };
-      const filteredColumns = neededRow.columns.filter(
-        el => el.id !== idToFind
-      );
+      // writing immutable state with using Immer (for change value simplier)
+      neededTd.amount = neededTd.amount + 1;
 
-      const newColumns = [...filteredColumns, newTd].sort((a, b) => a.N - b.N);
-      const filteredState = state.filter(el => el.M !== row);
-      const newRow = { ...neededRow, columns: newColumns };
-      const newState = [...filteredState, newRow].sort((a, b) => a.M - b.M);
+      // writing immutable state with JS native tools will look like this:
 
-      return newState;
+      // const { N, amount } = neededTd;
+      // const newTd = { N, id: idToFind, amount: amount + 1 };
+      // const filteredColumns = neededRow.columns.filter(
+      //   el => el.id !== idToFind
+      // );
+
+      // const newColumns = [...filteredColumns, newTd].sort((a, b) => a.N - b.N);
+      // const filteredState = state.filter(el => el.M !== row);
+      // const newRow = { ...neededRow, columns: newColumns };
+      // const newState = [...filteredState, newRow].sort((a, b) => a.M - b.M);
+
+      // return newState;
     },
   },
 });

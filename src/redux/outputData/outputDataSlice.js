@@ -11,8 +11,6 @@ export const outputDataSlice = createSlice({
   initialState: initialState,
   reducers: {
     setOutputData: (_, { payload }) => {
-      // const { M, N, x } = payload;
-      // return { M: M, N: N, x: x };
       return payload;
     },
   },
